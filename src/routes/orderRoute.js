@@ -6,7 +6,7 @@ const authMiddleware = require("../middleware/authMiddleware");
 router.post("/", authMiddleware, orderController.createOrder);
 router.patch("/:id/complete", authMiddleware, orderController.completeOrder);
 router.get("/", authMiddleware, orderController.getAllOrders);
-router.get("/unpaid", orderController.getUnpaidOrders);
-router.get("/complete", orderController.getCompleteOrders);
+router.get("/unpaid", authMiddleware, orderController.getUnpaidOrders);
+router.get("/:id/complete", authMiddleware, orderController.completeOrder);
 
 module.exports = router;

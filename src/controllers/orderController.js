@@ -115,12 +115,26 @@ const orderController = {
     }
   },
 
-  getCompleteOrders: async (req, res) => {
+  completeOrder: async (req, res) => {
     try {
-      const completeOrders = await Order.find({ status: "complete" }).populate(
-        "products.product"
-      );
-      res.status(200).json(completeOrders);
+      const orderId = req.params.id;
+
+      const order = await Order.findById(orderId);
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      if (order.status === "unpaid") {
+        order.cashier = req.user._id;
+        order.status = "complete";
+
+        await order.save();
+
+        res.status(200).json({ message: "Order completed successfully" });
+      } else {
+        res.status(400).json({ message: "Order cannot be completed" });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
