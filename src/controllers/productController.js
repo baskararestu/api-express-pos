@@ -115,6 +115,42 @@ const productController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+
+  deleteProduct: async (req, res) => {
+    try {
+      const productId = req.params.id;
+
+      const existingProduct = await Product.findById(productId);
+
+      if (!existingProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      const isProductSold = await Order.exists({
+        "products.product": existingProduct._id,
+        status: "complete",
+      });
+
+      if (isProductSold) {
+        existingProduct.isActive = false;
+        await existingProduct.save();
+
+        return res.status(200).json({
+          message: "Product deleted successfully",
+          product: existingProduct,
+        });
+      } else {
+        await Product.deleteOne({ _id: existingProduct._id });
+        return res.status(200).json({
+          message: "Product deleted successfully",
+          product: existingProduct,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
 
 module.exports = productController;
