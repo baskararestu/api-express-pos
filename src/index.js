@@ -4,6 +4,7 @@ const db = require("./database/db"); //cannot be deleted
 const adminRoutes = require("./routes/adminRoute");
 const categoryRoutes = require("./routes/categoryRoute");
 const productRoutes = require("./routes/productRoute");
+const orderRoutes = require("./routes/orderRoute");
 
 dotenv.config();
 const app = express();
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(`${BASE_URL}/admins`, adminRoutes);
 app.use(`${BASE_URL}/categories`, categoryRoutes);
 app.use(`${BASE_URL}/products`, productRoutes);
+app.use(`${BASE_URL}/orders`, orderRoutes);
 
 // Server setup
 const PORT = process.env.PORT || 3000;

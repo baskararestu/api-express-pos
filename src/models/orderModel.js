@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const saleRepotSchema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema({
   products: [
     {
       product: {
@@ -12,7 +12,8 @@ const saleRepotSchema = new mongoose.Schema({
       quantity: { type: Number, required: true },
     },
   ],
-  total: { type: Number, required: true },
+  totalPrice: { type: Number, required: true },
+  status: { type: String, enum: ["unpaid", "complete"], default: "unpaid" },
   cashier: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Admin",
@@ -21,6 +22,6 @@ const saleRepotSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
 });
 
-const SaleRepot = mongoose.model("SaleRepot", saleRepotSchema);
+const Order = mongoose.model("Order", orderSchema);
 
-module.exports = SaleRepot;
+module.exports = Order;
