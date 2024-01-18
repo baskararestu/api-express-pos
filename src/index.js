@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
 const db = require("./database/db"); //cannot be deleted
 const adminRoutes = require("./routes/adminRoute");
 const categoryRoutes = require("./routes/categoryRoute");
@@ -12,6 +13,7 @@ const BASE_URL = "/api";
 
 // Middleware setup
 app.use(express.json());
+app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
 // Routes setup

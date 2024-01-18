@@ -16,7 +16,7 @@ adminSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, username: this.username },
     process.env.JWT_SECRET,
-    { expiresIn: "3h" }
+    { expiresIn: "24h" }
   );
   return token;
 };

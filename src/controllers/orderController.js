@@ -102,6 +102,30 @@ const orderController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+
+  getUnpaidOrders: async (req, res) => {
+    try {
+      const unpaidOrders = await Order.find({ status: "unpaid" }).populate(
+        "products.product"
+      );
+      res.status(200).json(unpaidOrders);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+
+  getCompleteOrders: async (req, res) => {
+    try {
+      const completeOrders = await Order.find({ status: "complete" }).populate(
+        "products.product"
+      );
+      res.status(200).json(completeOrders);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
 
 module.exports = orderController;
