@@ -52,9 +52,7 @@ const adminController = {
 
       const token = admin.generateAuthToken();
 
-      res
-        .status(200)
-        .json({ message: "Login successful", role: admin.role, token });
+      res.status(200).json({ message: "Login successful", token });
     } catch (error) {
       console.error(error);
       res.status(401).json({ message: "Invalid login credentials" });

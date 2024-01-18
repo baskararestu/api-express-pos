@@ -7,7 +7,8 @@ const productRoutes = require("./routes/productRoute");
 
 dotenv.config();
 const app = express();
-const BASE_URL = `/api`;
+const BASE_URL = "/api";
+
 // Middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

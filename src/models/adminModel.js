@@ -15,7 +15,8 @@ adminSchema.statics.getAllAdmin = async function () {
 adminSchema.methods.generateAuthToken = function () {
   const token = jwt.sign(
     { _id: this._id, username: this.username },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET,
+    { expiresIn: "3h" }
   );
   return token;
 };

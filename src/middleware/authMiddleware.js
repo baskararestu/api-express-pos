@@ -2,10 +2,16 @@
 const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-  const token = req.header("Authorization");
+  const authHeader = req.header("Authorization");
 
-  if (!token) {
+  if (!authHeader) {
     return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const [bearer, token] = authHeader.split(" ");
+
+  if (bearer !== "Bearer" || !token) {
+    return res.status(401).json({ message: "Invalid token format" });
   }
 
   try {
