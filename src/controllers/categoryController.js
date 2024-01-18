@@ -58,6 +58,49 @@ const categoryController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+
+  updateCategory: async (req, res) => {
+    try {
+      const categoryId = req.params.id;
+      const { name } = req.body;
+
+      const existingCategory = await Category.findById(categoryId);
+
+      if (!existingCategory) {
+        return res.status(404).json({ message: "Category not found" });
+      }
+
+      const isNameChanged = existingCategory.name !== name;
+
+      if (isNameChanged) {
+        const newCategory = new Category({
+          name,
+        });
+
+        existingCategory.isActive = false;
+
+        const savedCategory = await newCategory.save();
+        await existingCategory.save();
+
+        return res.status(200).json({
+          message: "Category updated successfully",
+          category: savedCategory,
+        });
+      } else {
+        existingCategory.name = name;
+
+        const savedCategory = await existingCategory.save();
+
+        return res.status(200).json({
+          message: "Category updated successfully",
+          category: savedCategory,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
 };
 
 module.exports = categoryController;

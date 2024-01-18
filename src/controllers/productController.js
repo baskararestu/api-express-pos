@@ -1,5 +1,6 @@
 const Product = require("../models/productModel");
 const Category = require("../models/categoryModel");
+const Order = require("../models/orderModel");
 
 const productController = {
   createProduct: async (req, res) => {
@@ -58,6 +59,57 @@ const productController = {
       }
 
       res.status(200).json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  },
+
+  updateProduct: async (req, res) => {
+    try {
+      const productId = req.params.id;
+      const { name, price, categoryId } = req.body;
+
+      const existingProduct = await Product.findById(productId);
+
+      if (!existingProduct) {
+        return res.status(404).json({ message: "Product not found" });
+      }
+
+      const isProductSold = await Order.exists({
+        "products.product": existingProduct._id,
+        status: "complete",
+      });
+
+      if (isProductSold) {
+        const newProduct = new Product({
+          name,
+          price,
+          category: categoryId,
+          isActive: true,
+        });
+
+        existingProduct.isActive = false;
+
+        const savedProduct = await newProduct.save();
+        await existingProduct.save();
+
+        return res.status(200).json({
+          message: "Product updated successfully",
+          product: savedProduct,
+        });
+      } else {
+        existingProduct.name = name;
+        existingProduct.price = price;
+        existingProduct.category = categoryId;
+
+        const savedProduct = await existingProduct.save();
+
+        return res.status(200).json({
+          message: "Product updated successfully",
+          product: savedProduct,
+        });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
